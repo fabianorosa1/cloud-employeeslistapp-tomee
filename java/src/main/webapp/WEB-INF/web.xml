@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<display-name>Employees List</display-name>
+	
+	<!-- Core REST Service -->
+	<servlet>
+		<display-name>CoreService</display-name>
+		<servlet-name>CoreService</servlet-name>
+		<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
+		<init-param>
+			<param-name>jaxrs.serviceClasses</param-name>
+			<param-value>com.sap.employeeslist.services.CoreService</param-value>
+		</init-param>	
+		<init-param>
+			<param-name>jaxrs.providers</param-name>
+			<param-value>com.sap.employeeslist.services.common.CustomJacksonJaxbJsonProvider</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CoreService</servlet-name>
+		<url-pattern>/core/*</url-pattern>
+	</servlet-mapping>
+		
+	<resource-ref>
+		<res-ref-name>jdbc/java-hdi-container</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+	</resource-ref>	
+	
+	<ejb-local-ref>
+		<ejb-ref-name>ejb/CoreFacade</ejb-ref-name>
+		<local>com.sap.employeeslist.facade.CoreFacade</local>
+	</ejb-local-ref>	
+</web-app>
