@@ -8,9 +8,6 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sap.employeeslist.facade.common.BaseSessionFacade;
 import com.sap.employeeslist.persistence.dao.EmployeeDao;
 import com.sap.employeeslist.persistence.model.Employee;
@@ -25,7 +22,7 @@ import com.sap.employeeslist.persistence.model.Employee;
 @Stateless
 public class CoreFacade extends BaseSessionFacade {
 	private static final long serialVersionUID = -43587395734957L;
-	private static final Logger logger = LoggerFactory.getLogger(CoreFacade.class);
+	//private static final Logger logger = LoggerFactory.getLogger(CoreFacade.class);
 
 	@EJB
 	private EmployeeDao employeeDao;	
@@ -35,9 +32,9 @@ public class CoreFacade extends BaseSessionFacade {
 	 */
 	public CoreFacade() {
 		super();
-		logger.debug("[ENTER] Constructor CoreFacade");
+		System.out.println("[ENTER] Constructor CoreFacade");
 
-		logger.debug("[EXIT] Constructor CoreFacade");
+		System.out.println("[EXIT] Constructor CoreFacade");
 	}
 
 	/**
@@ -49,12 +46,23 @@ public class CoreFacade extends BaseSessionFacade {
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Employee> getEmployees() {
-		logger.trace("[ENTER] getEmployees");
+		System.out.println("[ENTER] getEmployees");
 
 		try {
 			return this.employeeDao.findAll();
 		} finally {
-			logger.trace("[EXIT] getEmployees");
+			System.out.println("[EXIT] getEmployees");
+		}
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void createEmployees(Employee employee) {
+		System.out.println("[ENTER] createEmployees");
+
+		try {
+			this.employeeDao.create(employee);
+		} finally {
+			System.out.println("[EXIT] createEmployees");
 		}
 	}
 }

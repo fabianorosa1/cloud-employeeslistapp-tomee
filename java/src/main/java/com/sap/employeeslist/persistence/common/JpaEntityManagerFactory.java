@@ -30,7 +30,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * the respective ServletContainer where the application is deployed.
  */
 public class JpaEntityManagerFactory {
-
+	//private static final Logger logger = LoggerFactory.getLogger(JpaEntityManagerFactory.class);
+	
 	/**
 	 * The package name which contains all the model classes.
 	 */
@@ -40,7 +41,8 @@ public class JpaEntityManagerFactory {
 	 * The static {@link EntityManagerFactory}.
 	 */
 	private static EntityManagerFactory entityManagerFactory;
-
+	private static EntityManagerFactory entityManagerFactoryDS;
+	
 	/**
 	 * Returns the singleton EntityManagerFactory instance for accessing the
 	 * default database.
@@ -50,15 +52,17 @@ public class JpaEntityManagerFactory {
 	 *             if a naming exception occurs during initialization
 	 * @throws SQLException
 	 *             if a database occurs during initialization
-	 
+	 */
 	public static synchronized EntityManagerFactory getEntityManagerFactory() throws NamingException, SQLException {
+		System.out.println("### getEntityManagerFactory: " + entityManagerFactory);
+		
 		if (JpaEntityManagerFactory.entityManagerFactory == null) {
 			JpaEntityManagerFactory.entityManagerFactory =
 				Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 		}
 		return JpaEntityManagerFactory.entityManagerFactory;
 	}
-	*/
+	
 	
 	/**
 	 * Returns the singleton EntityManagerFactory instance for accessing the
@@ -71,11 +75,11 @@ public class JpaEntityManagerFactory {
 	 *             if a database occurs during initialization
 	 * @throws IOException 
 	 */
-	public static synchronized EntityManagerFactory getEntityManagerFactory()
+	public static synchronized EntityManagerFactory getEntityManagerFactoryDS()
 			throws NamingException, SQLException, IOException {
-		System.out.println("### entityManagerFactory: " + entityManagerFactory);
+		System.out.println("### getEntityManagerFactoryDS: " + entityManagerFactoryDS);
 		
-		if (entityManagerFactory == null) {
+		if (entityManagerFactoryDS == null) {
 			
 		    BasicDataSource ds = new BasicDataSource();
 		    
@@ -86,17 +90,13 @@ public class JpaEntityManagerFactory {
 		    ds.setPassword(credentials.get("password").asText());
 		    
 			Map<String, Object> properties = new HashMap<String, Object>();
-			properties.put(PersistenceUnitProperties.JTA_DATASOURCE, ds);		
-			
-			
-			//properties.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.DROP_AND_CREATE);
-			//properties.put(PersistenceUnitProperties.DDL_GENERATION_MODE, PersistenceUnitProperties.DDL_BOTH_GENERATION);			
+			properties.put(PersistenceUnitProperties.JTA_DATASOURCE, ds);			
 								
-			entityManagerFactory = Persistence.createEntityManagerFactory(
+			entityManagerFactoryDS = Persistence.createEntityManagerFactory(
 					PERSISTENCE_UNIT_NAME, properties);
 						
 		}
-		return entityManagerFactory;
+		return entityManagerFactoryDS;
 	}
 	
 	/**

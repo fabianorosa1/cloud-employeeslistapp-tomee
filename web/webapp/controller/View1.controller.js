@@ -1,7 +1,8 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"sap/ui/model/json/JSONModel"
-], function(Controller, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"sap/m/MessageToast"
+], function(Controller, JSONModel, MessageToast) {
 	"use strict";
 	return Controller.extend("employeeslist.controller.View1", {
 		onInit: function() {	
@@ -19,6 +20,7 @@ sap.ui.define([
 					 },
 					 function _OnError(error) {
 						 console.log(error);
+						 MessageToast.show(error);
 					 }
 				   );		
 			
@@ -57,9 +59,11 @@ sap.ui.define([
 				 function _OnSuccess(oData, response) {
 					 var data = { "Employees" : oData.results };
 					 employeesModel.setData(data);
+					 MessageToast.show("Employee created: " + oFirstName + " " + oLastName);
 				 },
 				 function _OnError(error) {
 					 console.log(error);
+					 MessageToast.show(error);
 				 }
 			   );		
 			

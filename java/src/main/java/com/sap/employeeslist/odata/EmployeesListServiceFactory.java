@@ -17,12 +17,13 @@ public class EmployeesListServiceFactory extends ODataJPAServiceFactory {
 		ODataJPAContext oDataJPAContext = this.getODataJPAContext();
 
 		try {
-			EntityManagerFactory emf = JpaEntityManagerFactory.getEntityManagerFactory();
+			EntityManagerFactory emf = JpaEntityManagerFactory.getEntityManagerFactoryDS();
 			oDataJPAContext.setEntityManagerFactory(emf);
 			oDataJPAContext.setPersistenceUnitName(PERSISTENCE_UNIT_NAME);
 
 			return oDataJPAContext;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

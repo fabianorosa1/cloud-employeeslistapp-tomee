@@ -25,7 +25,7 @@ modules:
    requires:
     - name: java-hdi-container
       properties:
-         JBP_CONFIG_RESOURCE_CONFIGURATION: '[tomcat/webapps/ROOT/META-INF/context.xml:
+         JBP_CONFIG_RESOURCE_CONFIGURATION: '[tomee/webapps/ROOT/WEB-INF/resources.xml:
             {"service_name_for_DefaultDB" : "~{hdi-container-name}"}]'
            
  - name: employeeslist-ui
@@ -45,7 +45,8 @@ modules:
         
 resources:
  - name: java-hdi-container
+   type: com.sap.xs.hdi-container
    properties:
       hdi-container-name: ${service-name}
-   type: com.sap.xs.hdi-container   
+      
  

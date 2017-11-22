@@ -1,12 +1,10 @@
 package com.sap.employeeslist.persistence.common;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * How to connect to HANA Database on SAP Cloud: neo.sh open-db-tunnel -h
@@ -21,18 +19,18 @@ import javax.persistence.EntityManager;
 public abstract class AbstractJpaDAO<T extends Serializable> {
 	protected Class<T> entityClass;
 
-	//@PersistenceContext
+	@PersistenceContext
 	protected EntityManager entityManager;
 
 	/**
 	 * Empty constructor for AbstractJpaDAO.
 	 */
 	public AbstractJpaDAO() {
-		try {
-			this.entityManager = JpaEntityManagerFactory.getEntityManagerFactory().createEntityManager();
-		} catch (NamingException | SQLException | IOException e) {
-			throw new RuntimeException(e);
-		}
+//		try {
+//			this.entityManager = JpaEntityManagerFactory.getEntityManagerFactory().createEntityManager();
+//		} catch (NamingException | SQLException e) {
+//			throw new RuntimeException(e);
+//		}
 	}
 
 	/**

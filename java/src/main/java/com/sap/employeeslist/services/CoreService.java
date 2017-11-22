@@ -25,8 +25,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +34,7 @@ import com.sap.employeeslist.services.common.BaseService;
 
 public class CoreService extends BaseService {
 	private static final long serialVersionUID = -5262342342342L;
-	private static final Logger logger = LoggerFactory.getLogger(CoreService.class);
+	//private static final Logger logger = LoggerFactory.getLogger(CoreService.class);
 
 	@EJB
 	private final CoreFacade coreFacade;
@@ -48,12 +46,12 @@ public class CoreService extends BaseService {
 	 * 
 	 */
 	public CoreService() throws NamingException {
-		logger.debug("[ENTER] Constructor CoreService");
+		System.out.println("[ENTER] Constructor CoreService");
 
 		// lookup the EJBs references for use in service
 		this.coreFacade = this.lookupEJBFacade(CoreFacade.class);
 
-		logger.debug("[EXIT] Constructor CoreService");
+		System.out.println("[EXIT] Constructor CoreService");
 	}
 
 	/**
@@ -77,21 +75,38 @@ public class CoreService extends BaseService {
 		List<String> returns = new ArrayList<String>();
 
 		try {
-			System.out.println("processDatabase JDBC");
+			System.out.println("$$$$$$$$$$$$$$$$ processDatabase JDBC $$$$$$$$$$$$$$$$");
 			processDatabase(getConnJDBC());
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("Error on loading processDatabase JDBC: " + e.getMessage());
 			returns.add(e.getMessage());
 		}
 
 		try {
-			System.out.println("processDatabase DS");
+			System.out.println("$$$$$$$$$$$$$$$$ processDatabase DS $$$$$$$$$$$$$$$$");
 			processDatabase(getConnDS());
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("Error on loading processDatabase DS: " + e.getMessage());
 			returns.add(e.getMessage());
 		}
 
+		try {
+			System.out.println("$$$$$$$$$$$$$$$$ Create entity in JPA $$$$$$$$$$$$$$$$");
+			Employee employee = new Employee();
+			employee.setFirstName("Service teste");
+			employee.setLastName(this.request.getSession().getId());
+			
+			this.coreFacade.createEmployees(employee);
+			System.out.println("Employees list: " + this.coreFacade.getEmployees());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Create entity in JPA: " + e.getMessage());
+			returns.add(e.getMessage());
+		}
+
+		
 		return returns.toString();
 	}
 
@@ -173,7 +188,8 @@ public class CoreService extends BaseService {
 		ds.setPassword(credentials.get("password").asText());
 
 		Connection connection = ds.getConnection();		
-
+		ds.close();
+		
 		return connection;
 	}
 
@@ -186,7 +202,7 @@ public class CoreService extends BaseService {
 	private Connection getConnDS() throws NamingException, SQLException {
 		InitialContext ctx = new InitialContext();
 		Context envContext = (Context) ctx.lookup("java:/comp/env");
-		DataSource dsHana = (DataSource) envContext.lookup("jdbc/java-hdi-container");
+		DataSource dsHana = (DataSource) envContext.lookup("jdbc/DefaultDB");
 
 		Connection connection = dsHana.getConnection();
 
