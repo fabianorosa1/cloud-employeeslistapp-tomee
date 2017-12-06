@@ -8,7 +8,19 @@ modules:
    path: db
    requires:
      - name: hanadb-hdi-container
-           
+     
+ - name: approuter
+   type: javascript.nodejs
+   path: js/security/approuter
+   parameters:
+     host: employeeslist
+     memory: 128M
+   requires:
+    - name: xsuaa
+      properties:
+         TENANT_HOST_PATTERN: 'employeeslist(.*).cfapps.eu10.hana.ondemand.com'
+         destinations: '[{"name":"employeeslist", "url" :"https://s0017130272trial-trial-dev-employeeslist-java.cfapps.eu10.hana.ondemand.com/employeeslist.svc/Employees", "forwardAuthToken": true}]' 
+          
  - name: employeeslist-java
    type: java.tomee
    path: java
@@ -28,23 +40,7 @@ modules:
       properties:
          JBP_CONFIG_RESOURCE_CONFIGURATION: '[tomee/webapps/ROOT/WEB-INF/resources.xml:
             {"service_name_for_DefaultDB" : "~{hdi-container-name}"}]'
-           
- - name: employeeslist-ui
-   type: javascript.nodejs
-   path: web
-   build-parameters:
-     ignore: [".gitignore", ".cfignore", pom.xml, target/, sapui5/, node/]
-     builder: npm
-   parameters:
-      disk-quota: 256M
-      memory: 256M   
-   requires:
-    - name: employeeslist-service
-      group: destinations
-      properties:
-        name: employeesService
-        url: ~{url}
-        
+                   
 resources:
  - name: hanadb-hdi-container
    type: com.sap.xs.hdi-container
@@ -53,5 +49,8 @@ resources:
    parameters:
       config:
          schema: employeeslist     
-      
+ - name: xsuaa
+   type: com.sap.xs.uaa
+   properties:
+      xsuaa: ${service-name}      
  
