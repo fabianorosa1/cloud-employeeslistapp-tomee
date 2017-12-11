@@ -1,0 +1,19 @@
+{
+  "xsappname": "approuter",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Display",
+      "description": "display"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Display",
+      "description": "Required to display things in our solution",
+      "scope-references"     : [
+        "$XSAPPNAME.Display"
+      ]
+    }
+  ]
+}

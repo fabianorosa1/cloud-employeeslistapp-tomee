@@ -3,8 +3,10 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
-	<display-name>Employees List</display-name>
-	
+	<display-name>Employees list</display-name>
+	<login-config>
+        <auth-method>XSUAA</auth-method>
+    </login-config>
 	<!-- Core REST Service -->
 	<servlet>
 		<display-name>CoreService</display-name>
@@ -13,7 +15,7 @@
 		<init-param>
 			<param-name>jaxrs.serviceClasses</param-name>
 			<param-value>com.sap.employeeslist.services.CoreService</param-value>
-		</init-param>	
+		</init-param>
 		<init-param>
 			<param-name>jaxrs.providers</param-name>
 			<param-value>com.sap.employeeslist.services.common.CustomJacksonJaxbJsonProvider</param-value>
@@ -23,14 +25,15 @@
 		<servlet-name>CoreService</servlet-name>
 		<url-pattern>/core/*</url-pattern>
 	</servlet-mapping>
-		
+
 	<resource-ref>
 		<res-ref-name>jdbc/DefaultDB</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
-	</resource-ref>	
-	
+	</resource-ref>
+
 	<ejb-local-ref>
 		<ejb-ref-name>ejb/CoreFacade</ejb-ref-name>
 		<local>com.sap.employeeslist.facade.CoreFacade</local>
-	</ejb-local-ref>	
+	</ejb-local-ref>
 </web-app>
+

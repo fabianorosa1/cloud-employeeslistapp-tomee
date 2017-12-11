@@ -16,11 +16,12 @@ modules:
      host: employeeslist
      memory: 128M
    requires:
-    - name: xsuaa
+    - name: myuaa
       properties:
          TENANT_HOST_PATTERN: 'employeeslist(.*).cfapps.eu10.hana.ondemand.com'
-         destinations: '[{"name":"employeeslist", "url" :"https://s0017130272trial-trial-dev-employeeslist-java.cfapps.eu10.hana.ondemand.com/employeeslist.svc/Employees", "forwardAuthToken": true}]' 
-          
+         destinations: '[{"name":"employeeslist", "url" :"https://s0017130272trial-trial-dev-employeeslist-java.cfapps.eu10.hana.ondemand.com/employeeslist.svc/Employees", "forwardAuthToken": true}]'  
+         SAP_JWT_TRUST_ACL: '[{"clientid" : "*", "identityzone" : "*"}]'
+         
  - name: employeeslist-java
    type: java.tomee
    path: java
@@ -32,14 +33,13 @@ modules:
    parameters:
       memory: 512M
    provides:
-    - name: employeeslist-service
-      properties:
-        url: "${default-url}" 
+    - name: employeeslist-service  
    requires:
     - name: hanadb-hdi-container
       properties:
-         JBP_CONFIG_RESOURCE_CONFIGURATION: '[tomee/webapps/ROOT/WEB-INF/resources.xml:
-            {"service_name_for_DefaultDB" : "~{hdi-container-name}"}]'
+        JBP_CONFIG_RESOURCE_CONFIGURATION: '[tomee/webapps/ROOT/WEB-INF/resources.xml:
+            {"service_name_for_DefaultDB" : "~{hdi-container-name}"}]'       
+    - name: myuaa 
                    
 resources:
  - name: hanadb-hdi-container
@@ -48,9 +48,8 @@ resources:
       hdi-container-name: ${service-name}
    parameters:
       config:
-         schema: employeeslist     
- - name: xsuaa
+         schema: employeeslist   
+           
+ - name: myuaa
    type: com.sap.xs.uaa
-   properties:
-      xsuaa: ${service-name}      
  
